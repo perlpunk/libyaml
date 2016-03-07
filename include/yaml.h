@@ -1298,6 +1298,10 @@ typedef struct yaml_parser_s {
     /** The currently parsed document. */
     yaml_document_t *document;
 
+    /** Optionally forgive some reader errors.
+     * Make them non-fatal. */
+    int problem_nonstrict;
+
     /**
      * @}
      */
@@ -1684,6 +1688,8 @@ typedef struct yaml_emitter_s {
     int indention;
     /** If an explicit document end is required? */
     int open_ended;
+    /** If a map requires a new indent (backcompat, unreadable by YAML.pm) */
+    int indentless_map;
 
     /** Anchor analysis. */
     struct {

@@ -862,7 +862,7 @@ yaml_emitter_emit_block_sequence_item(yaml_emitter_t *emitter,
     if (first)
     {
         if (!yaml_emitter_increase_indent(emitter, 0,
-                    (emitter->mapping_context && !emitter->indention)))
+            emitter->indentless_map && (emitter->mapping_context && !emitter->indention)))
             return 0;
     }
 
