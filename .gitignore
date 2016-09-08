@@ -32,3 +32,6 @@ run*
 stamp-h1
 test-*
 !config/config.h.in
+/win32/Makefile
+.hg
+TAGS
