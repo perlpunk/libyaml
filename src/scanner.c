@@ -599,7 +599,7 @@ static int
 yaml_parser_stale_simple_keys(yaml_parser_t *parser);
 
 static int
-yaml_parser_save_simple_key(yaml_parser_t *parser);
+yaml_parser_save_simple_key(yaml_parser_t *parser, int unlimited);
 
 static int
 yaml_parser_remove_simple_key(yaml_parser_t *parser);
@@ -1069,9 +1069,18 @@ yaml_parser_stale_simple_keys(yaml_parser_t *parser)
          *  - is shorter than 1024 characters.
          */
 
+         /*
+          * YAML 1.2 change: Flow mapping keys >1024 are allowed
+          * See rule 144
+          */
+
         if (simple_key->possible
                 && (simple_key->mark.line < parser->mark.line
-                    || simple_key->mark.index+1024 < parser->mark.index)) {
+                    || (
+                        ! simple_key->unlimited &&
+                        simple_key->mark.index+1024 < parser->mark.index
+                        )
+                    )) {
 
             /* Check if the potential simple key to be removed is required. */
 
@@ -1094,7 +1103,7 @@ yaml_parser_stale_simple_keys(yaml_parser_t *parser)
  */
 
 static int
-yaml_parser_save_simple_key(yaml_parser_t *parser)
+yaml_parser_save_simple_key(yaml_parser_t *parser, int unlimited)
 {
     /*
      * A simple key is required at the current position if the scanner is in
@@ -1113,6 +1122,7 @@ yaml_parser_save_simple_key(yaml_parser_t *parser)
     {
         yaml_simple_key_t simple_key;
         simple_key.possible = 1;
+        simple_key.unlimited = unlimited;
         simple_key.required = required;
         simple_key.token_number =
             parser->tokens_parsed + (parser->tokens.tail - parser->tokens.head);
@@ -1160,7 +1170,7 @@ yaml_parser_remove_simple_key(yaml_parser_t *parser)
 static int
 yaml_parser_increase_flow_level(yaml_parser_t *parser)
 {
-    yaml_simple_key_t empty_simple_key = { 0, 0, 0, { 0, 0, 0 } };
+    yaml_simple_key_t empty_simple_key = { 0, 0, 0, { 0, 0, 0 }, 0 };
 
     /* Reset the simple key on the next level. */
 
@@ -1290,7 +1300,7 @@ yaml_parser_unroll_indent(yaml_parser_t *parser, ptrdiff_t column)
 static int
 yaml_parser_fetch_stream_start(yaml_parser_t *parser)
 {
-    yaml_simple_key_t simple_key = { 0, 0, 0, { 0, 0, 0 } };
+    yaml_simple_key_t simple_key = { 0, 0, 0, { 0, 0, 0 }, 0 };
     yaml_token_t token;
 
     /* Set the initial indentation. */
@@ -1453,7 +1463,7 @@ yaml_parser_fetch_flow_collection_start(yaml_parser_t *parser,
 
     /* The indicators '[' and '{' may start a simple key. */
 
-    if (!yaml_parser_save_simple_key(parser))
+    if (!yaml_parser_save_simple_key(parser, 0))
         return 0;
 
     /* Increase the flow level. */
@@ -1768,7 +1778,7 @@ yaml_parser_fetch_anchor(yaml_parser_t *parser, yaml_token_type_t type)
 
     /* An anchor or an alias could be a simple key. */
 
-    if (!yaml_parser_save_simple_key(parser))
+    if (!yaml_parser_save_simple_key(parser, 0))
         return 0;
 
     /* A simple key cannot follow an anchor or an alias. */
@@ -1798,7 +1808,7 @@ yaml_parser_fetch_tag(yaml_parser_t *parser)
 
     /* A tag could be a simple key. */
 
-    if (!yaml_parser_save_simple_key(parser))
+    if (!yaml_parser_save_simple_key(parser, 0))
         return 0;
 
     /* A simple key cannot follow a tag. */
@@ -1860,7 +1870,7 @@ yaml_parser_fetch_flow_scalar(yaml_parser_t *parser, int single)
 
     /* A plain scalar could be a simple key. */
 
-    if (!yaml_parser_save_simple_key(parser))
+    if (!yaml_parser_save_simple_key(parser, 1))
         return 0;
 
     /* A simple key cannot follow a flow scalar. */
@@ -1891,7 +1901,7 @@ yaml_parser_fetch_plain_scalar(yaml_parser_t *parser)
 
     /* A plain scalar could be a simple key. */
 
-    if (!yaml_parser_save_simple_key(parser))
+    if (!yaml_parser_save_simple_key(parser, 0))
         return 0;
 
     /* A simple key cannot follow a flow scalar. */

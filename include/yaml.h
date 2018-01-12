@@ -1004,6 +1004,9 @@ typedef struct yaml_simple_key_s {
 
     /** The position mark. */
     yaml_mark_t mark;
+
+    /** If it doesn't have the 1024 char limit */
+    int unlimited;
 } yaml_simple_key_t;
 
 /**
