@@ -1901,7 +1901,7 @@ yaml_parser_fetch_plain_scalar(yaml_parser_t *parser)
 
     /* A plain scalar could be a simple key. */
 
-    if (!yaml_parser_save_simple_key(parser, 0))
+    if (!yaml_parser_save_simple_key(parser, 1))
         return 0;
 
     /* A simple key cannot follow a flow scalar. */
