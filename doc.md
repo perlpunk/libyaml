@@ -64,7 +64,7 @@ Google Summer of Code under the mentorship of Clark Evans.
 ## Download and Installation
 The current release of LibYAML: 0.1.7 (2016-08-28).
 
-Download the source package: http://pyyaml.org/download/libyaml/yaml-0.1.7.tar.gz.
+Download the source package: https://github.com/yaml/libyaml/archive/0.1.7.tar.gz
 
 To build and install LibYAML, run
 
@@ -72,7 +72,7 @@ To build and install LibYAML, run
     $ make
     # make install
 
-You may check out the latest development code of LibYAML from the Mercurial repository https://bitbucket.org/xi/libyaml:
+You may check out the latest development code of LibYAML from the Git repository https://github.org/yaml/libyaml:
 
     $ git clone https://github.com/yaml/libyaml
 
@@ -85,7 +85,7 @@ If you checked out the LibYAML source code from the Git repository, you can buil
 
 ## Development and bug reports
 
-You may check out the LibYAML source code from LibYAML HG repository.
+You may check out the LibYAML source code from LibYAML Git repository.
 
 If you find a bug in LibYAML, please file a bug report. You may review open bugs through the list of open tickets.
 
@@ -115,16 +115,16 @@ may be covered in the latter releases, they are not in the scope of the initial 
 
 The Parser produces while the Emitter accepts the following types of events:
 
-* STREAM-START
-* STREAM-END
-* DOCUMENT-START
-* DOCUMENT-END
-* ALIAS
-* SCALAR
-* SEQUENCE-START
-* SEQUENCE-END
-* MAPPING-START
-* MAPPING-END
+* `STREAM-START`
+* `STREAM-END`
+* `DOCUMENT-START`
+* `DOCUMENT-END`
+* `ALIAS`
+* `SCALAR`
+* `SEQUENCE-START`
+* `SEQUENCE-END`
+* `MAPPING-START`
+* `MAPPING-END`
 
 A valid sequence of events should obey the grammar:
 
@@ -138,26 +138,26 @@ A valid sequence of events should obey the grammar:
 
 The following attributes affect the intepretation of a YAML document.
 
-* ALIAS
-  * anchor - the alias anchor; [0-9a-zA-Z_-]+; not NULL.
-* SCALAR
-  * anchor - the node anchor; [0-9a-zA-Z_-]+; may be NULL.
-  * tag - the node tag; should either start with ! (local tag) or be a valid URL (global tag); may be  NULL
-    or ! in which case either plain_implicit or quoted_implicit should be True.
-  * plain_implicit - True if the node tag may be omitted whenever the scalar value is presented in the plain style.
-  * quoted_implicit - True if the node tag may be omitted whenever the scalar value is presented in any non-plain style.
-  * value - the scalar value; a valid utf-8 sequence and may contain NUL characters; not NULL.
-  * length - the length of the scalar value.
-* SEQUENCE-START
-  * anchor - the node anchor; [0-9a-zA-Z_-]+; may be NULL.
-  * tag - the node tag; should either start with ! (local tag) or be a valid URL (global tag); may be  NULL
-    or ! in which case implicit should be True.
-  * implicit - True if the node tag may be omitted.
-* MAPPING-START
-  * anchor - the node anchor; [0-9a-zA-Z_-]+; may be NULL.
-  * tag - the node tag; should either start with ! (local tag) or be a valid URL (global tag); may be
-    NULL or ! in which case implicit should be True.
-  * implicit - True if the node tag may be omitted.
+* `ALIAS`
+  * `anchor` - the alias anchor; `[0-9a-zA-Z_-]+`; not `NULL`.
+* `SCALAR`
+  * `anchor` - the node anchor; `[0-9a-zA-Z_-]+`; may be `NULL`.
+  * `tag` - the node tag; should either start with ! (local tag) or be a valid URL (global tag); may be  `NULL`
+    or `!` in which case either plain_implicit or quoted_implicit should be True.
+  * `plain_implicit` - `True` if the node tag may be omitted whenever the scalar value is presented in the plain style.
+  * `quoted_implicit` - `True` if the node tag may be omitted whenever the scalar value is presented in any non-plain style.
+  * `value` - the scalar value; a valid utf-8 sequence and may contain `NUL` characters; not `NULL`.
+  * `length` - the length of the scalar value.
+* `SEQUENCE-START`
+  * `anchor` - the node anchor; `[0-9a-zA-Z_-]+`; may be NULL.
+  * `tag` - the node tag; should either start with `!` (local tag) or be a valid URL (global tag); may be  `NULL`
+    or ! in which case implicit should be `True`.
+  * `implicit` - True if the node tag may be omitted.
+* `MAPPING-START`
+  * `anchor` - the node anchor; `[0-9a-zA-Z_-]+`; may be `NULL`.
+  * `tag` - the node tag; should either start with `!` (local tag) or be a valid URL (global tag); may be
+    `NULL` or `!` in which case implicit should be `True`.
+  * `implicit` - `True` if the node tag may be omitted.
 
 #### Stylistic Event Attributes
 
@@ -165,25 +165,25 @@ The following attributes don’t affect the interpretation of a YAML document. W
 an application should not consider these attributes for resolving implicit tags and constructing
 representation graphs or native objects. The Emitter may ignore these attributes if they cannot be satisfied.
 
-* STREAM-START
-  * encoding - the document encoding; utf-8|utf-16-le|utf-16-be.
-* DOCUMENT-START
-  * version_directive - the version specified with the %YAML directive; the only valid value is 1.1; may be NULL.
-  * tag_directives - a set of tag handles and the corresponding tag prefixes specified with the  %TAG
-    directive; tag handles should match !|!!|![0-9a-zA-Z_-]+! while tag prefixes should be prefixes of valid
+* `STREAM-START`
+  * `encoding` - the document encoding; `utf-8|utf-16-le|utf-16-be`.
+* `DOCUMENT-START`
+  * `version_directive` - the version specified with the `%YAML` directive; the only valid value is `1.1`; may be `NULL`.
+  * `tag_directives` - a set of tag handles and the corresponding tag prefixes specified with the  `%TAG`
+    directive; tag handles should match `!|!!|![0-9a-zA-Z_-]+!` while tag prefixes should be prefixes of valid
     local or global tags; may be empty.
-  * implicit - True if the document start indicator --- is not present.
-* DOCUMENT-END
-  * implicit - True if the document end indicator ... is not present.
-* SCALAR
-  * style - the value style;  plain|single-quoted|double-quoted|literal|folded.
-* SEQUENCE-START
-  * style - the sequence style; block|flow.
-* MAPPING-START
-  * style - the mapping style; block|flow.
+  * `implicit` - `True` if the document start indicator `---` is not present.
+* `DOCUMENT-END`
+  * `implicit` - `True` if the document end indicator `...` is not present.
+* `SCALAR`
+  * `style` - the value style;  `plain|single-quoted|double-quoted|literal|folded`.
+* `SEQUENCE-START`
+  * `style` - the sequence style; `block|flow`.
+* `MAPPING-START`
+  * `style` - the mapping style; `block|flow`.
 * any event
-  * start_mark - the position of the event beginning; attributes: index (in characters), line and column (starting from 0).
-  * end_mark - the position of the event end; attributes: index (in characters), line and  column (starting from 0).
+  * `start_mark` - the position of the event beginning; attributes: `index` (in characters), `line` and `column` (starting from `0`).
+  * `end_mark` - the position of the event end; attributes: `index` (in characters), `line` and  `column` (starting from `0`).
 
 ## API
 
@@ -261,7 +261,9 @@ yaml_parser_delete(&parser);
 return 0;
 ```
 
-Emitter API Synopsis
+#### Emitter API Synopsis
+
+```
 #include <yaml.h>
 
 yaml_emitter_t emitter;
