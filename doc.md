@@ -1,63 +1,3 @@
-LibYAML - A C library for parsing and emitting YAML.
-
-To build and install the library, run:
-$ ./configure
-$ make
-# make install
-
-If you checked the source code from the Git repository, run
-$ ./bootstrap
-$ ./configure
-$ make
-# make install
-
-For more information, check the LibYAML homepage:
-'https://github.com/yaml/libyaml'.
-
-Post your questions and opinions to the YAML-Core mailing list:
-'http://lists.sourceforge.net/lists/listinfo/yaml-core'.
-
-Submit bug reports and feature requests to the LibYAML bug tracker:
-'https://github.com/yaml/libyaml/issues/new'.
-
-LibYAML is written by Kirill Simonov <xi@resolvent.net>.  It is released
-under the MIT license.  See the file LICENSE for more details.
-
-This project is developed for Python Software Foundation as a part of
-Google Summer of Code under the mentorship of Clark Evans.
-
-
-LibYAML - A C library for parsing and emitting YAML.
-
-To build and install the library, run:
-$ ./configure
-$ make
-# make install
-
-If you checked the source code from the Git repository, run
-$ ./bootstrap
-$ ./configure
-$ make
-# make install
-
-For more information, check the LibYAML homepage:
-'https://github.com/yaml/libyaml'.
-
-Post your questions and opinions to the YAML-Core mailing list:
-'http://lists.sourceforge.net/lists/listinfo/yaml-core'.
-
-Submit bug reports and feature requests to the LibYAML bug tracker:
-'https://github.com/yaml/libyaml/issues/new'.
-
-LibYAML is written by Kirill Simonov <xi@resolvent.net>.  It is released
-under the MIT license.  See the file LICENSE for more details.
-
-This project is developed for Python Software Foundation as a part of
-Google Summer of Code under the mentorship of Clark Evans.
-
-
-
-
 # LibYAML
 
 
@@ -85,17 +25,22 @@ If you checked out the LibYAML source code from the Git repository, you can buil
 
 ## Development and bug reports
 
-You may check out the LibYAML source code from LibYAML Git repository.
+You may check out the LibYAML source code from [LibYAML Git repository](https://github.com/yaml/libyaml).
 
-If you find a bug in LibYAML, please file a bug report. You may review open bugs through the list of open tickets.
+If you find a bug in LibYAML, please [file a bug
+report](https://github.com/yaml/libyaml/issues/new). You may review open bugs
+through the list of [open issues](https://github.com/yaml/libyaml/issues).
 
-You may discuss LibYAML at the YAML-core mailing list.
+You may discuss LibYAML at the [YAML-core mailing
+list](http://lists.sourceforge.net/lists/listinfo/yaml-core).
 
 ## Documentation
 
 ### Scope
 
-LibYAML covers presenting and parsing processes. Thus LibYAML defines the following two processors:
+LibYAML covers presenting and parsing
+[processes](http://yaml.org/spec/1.1/#id859458). Thus LibYAML defines the
+following two processors:
 
 * Parser, which takes an input stream of bytes and produces a sequence of parsing events.
 * Emitter, which takes a sequence of events and produces a stream of bytes.
@@ -188,141 +133,143 @@ representation graphs or native objects. The Emitter may ignore these attributes
 ## API
 
 Note: the API may change drastically. You may also check the header file:
-https://github.com/yaml/libyaml/src/tip/include/yaml.h
+https://github.com/yaml/libyaml/blob/master/include/yaml.h
 
 ### Parser API Synopsis
 
 ```
-#include <yaml.h>
+    #include <yaml.h>
 
-yaml_parser_t parser;
-yaml_event_t event;
+    yaml_parser_t parser;
+    yaml_event_t event;
 
-int done = 0;
+    int done = 0;
 
-/* Create the Parser object. */
-yaml_parser_initialize(&parser);
+    /* Create the Parser object. */
+    yaml_parser_initialize(&parser);
 
-/* Set a string input. */
-char *input = "...";
-size_t length = strlen(input);
+    /* Set a string input. */
+    char *input = "...";
+    size_t length = strlen(input);
 
-yaml_parser_set_input_string(&parser, input, length);
+    yaml_parser_set_input_string(&parser, input, length);
 
-/* Set a file input. */
-FILE *input = fopen("...", "rb");
+    /* Set a file input. */
+    FILE *input = fopen("...", "rb");
 
-yaml_parser_set_input_file(&parser, input);
+    yaml_parser_set_input_file(&parser, input);
 
-/* Set a generic reader. */
-void *ext = ...;
-int read_handler(void *ext, char *buffer, int size, int *length) {
-    /* ... */
-    *buffer = ...;
-    *length = ...;
-    /* ... */
-    return error ? 0 : 1;
-}
+    /* Set a generic reader. */
+    void *ext = ...;
+    int read_handler(void *ext, char *buffer, int size, int *length) {
+        /* ... */
+        *buffer = ...;
+        *length = ...;
+        /* ... */
+        return error ? 0 : 1;
+    }
 
-yaml_parser_set_input(&parser, read_handler, ext);
+    yaml_parser_set_input(&parser, read_handler, ext);
 
-/* Read the event sequence. */
-while (!done) {
+    /* Read the event sequence. */
+    while (!done) {
 
-    /* Get the next event. */
-    if (!yaml_parser_parse(&parser, &event))
-        goto error;
+        /* Get the next event. */
+        if (!yaml_parser_parse(&parser, &event))
+            goto error;
 
-    /*
-      ...
-      Process the event.
-      ...
-    */
+        /*
+          ...
+          Process the event.
+          ...
+        */
 
-    /* Are we finished? */
-    done = (event.type == YAML_STREAM_END_EVENT);
+        /* Are we finished? */
+        done = (event.type == YAML_STREAM_END_EVENT);
 
-    /* The application is responsible for destroying the event object. */
-    yaml_event_delete(&event);
+        /* The application is responsible for destroying the event object. */
+        yaml_event_delete(&event);
 
-}
+    }
 
-/* Destroy the Parser object. */
-yaml_parser_delete(&parser);
+    /* Destroy the Parser object. */
+    yaml_parser_delete(&parser);
 
-return 1;
+    return 1;
 
-/* On error. */
-error:
+    /* On error. */
+    error:
 
-/* Destroy the Parser object. */
-yaml_parser_delete(&parser);
+    /* Destroy the Parser object. */
+    yaml_parser_delete(&parser);
 
-return 0;
+    return 0;
 ```
 
 #### Emitter API Synopsis
 
 ```
-#include <yaml.h>
+    #include <yaml.h>
 
-yaml_emitter_t emitter;
-yaml_event_t event;
+    yaml_emitter_t emitter;
+    yaml_event_t event;
 
-/* Create the Emitter object. */
-yaml_emitter_initialize(&emitter);
+    /* Create the Emitter object. */
+    yaml_emitter_initialize(&emitter);
 
-/* Set a file output. */
-FILE *output = fopen("...", "wb");
+    /* Set a file output. */
+    FILE *output = fopen("...", "wb");
 
-yaml_emitter_set_output_file(&emitter, output);
+    yaml_emitter_set_output_file(&emitter, output);
 
-/* Set a generic writer. */
-void *ext = ...;
-int write_handler(void *ext, char *buffer, int size) {
+    /* Set a generic writer. */
+    void *ext = ...;
+    int write_handler(void *ext, char *buffer, int size) {
+        /*
+           ...
+           Write `size` bytes.
+           ...
+        */
+        return error ? 0 : 1;
+    }
+
+    yaml_emitter_set_output(&emitter, write_handler, ext);
+
+    /* Create and emit the STREAM-START event. */
+    yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING);
+    if (!yaml_emitter_emit(&emitter, &event))
+        goto error;
+
     /*
-       ...
-       Write `size` bytes.
-       ...
+      ...
+      Emit more events.
+      ...
     */
-    return error ? 0 : 1;
-}
 
-yaml_emitter_set_output(&emitter, write_handler, ext);
+    /* Create and emit the STREAM-END event. */
+    yaml_stream_end_event_initialize(&event);
+    if (!yaml_emitter_emit(&emitter, &event))
+        goto error;
 
-/* Create and emit the STREAM-START event. */
-yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING);
-if (!yaml_emitter_emit(&emitter, &event))
-    goto error;
+    /* Destroy the Emitter object. */
+    yaml_emitter_delete(&emitter);
 
-/*
-  ...
-  Emit more events.
-  ...
-*/
+    return 1;
 
-/* Create and emit the STREAM-END event. */
-yaml_stream_end_event_initialize(&event);
-if (!yaml_emitter_emit(&emitter, &event))
-    goto error;
+    /* On error. */
+    error:
 
-/* Destroy the Emitter object. */
-yaml_emitter_delete(&emitter);
+    /* Destroy the Emitter object. */
+    yaml_emitter_delete(emitter);
 
-return 1;
-
-/* On error. */
-error:
-
-/* Destroy the Emitter object. */
-yaml_emitter_delete(emitter);
-
-return 0;
+    return 0;
 ```
 
 ## Examples
 
-You may check tests and examples in the source distribution.
+You may check [tests](https://github.com/yaml/libyaml/tree/master/tests) and
+[examples](https://github.com/yaml/libyaml/tree/master/examples) in the source
+distribution.
 
 # Copyright
 
@@ -330,5 +277,7 @@ The LibYAML library is written by Kirill Simonov.
 
 LibYAML is released under the MIT license.
 
-This project is developed for Python Software Foundation as a part of Google Summer of Code
-under the mentorship of Clark Evans.
+This project is developed for [Python Software
+Foundation](http://www.python.org/psf/) as a part of [Google Summer of
+Code](http://code.google.com/soc/2006/psf/appinfo.html?csaid=75A3CBE3EC4B3DB2)
+under the mentorship of [Clark Evans](http://clarkevans.com/).
