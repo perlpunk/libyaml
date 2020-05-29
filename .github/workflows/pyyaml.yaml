@@ -1,0 +1,20 @@
+name: pyyaml-test
+
+on:
+#  push:
+#    branches: [ pyyaml* ]
+  schedule:
+    - cron: |-
+        10 21 * * *
+
+jobs:
+  pyyaml-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - run: git log -1
+    - run: date
+    - run: env | sort
+    - run: echo hello
+
