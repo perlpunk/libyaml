@@ -35,12 +35,9 @@ tests/run-test-suite:
 	-git worktree prune
 	git worktree add $@ run-test-suite
 
-packaging:
-	-git branch --track $@ origin/$@
-	git worktree add --force $@ $@
+docker-dist:
+	make -C packaging/docker libyaml-dist
 
-docker-dist: packaging
-	make -C $</docker libyaml-dist
-
-docker-test-pyyaml: packaging
-	make -C $</docker test-pyyaml
+docker-test-pyyaml:
+	make -C packaging/docker test-pyyaml PYTHON=python2
+	make -C packaging/docker test-pyyaml PYTHON=python3

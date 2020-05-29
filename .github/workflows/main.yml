@@ -15,10 +15,10 @@ jobs:
       matrix:
         compiler:
         - gcc
-        - clang
+#        - clang
         os:
         - ubuntu-latest
-        - macOS-latest
+#        - macOS-latest
 
     steps:
     - uses: actions/checkout@v2

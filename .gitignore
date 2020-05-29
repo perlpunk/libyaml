@@ -18,7 +18,10 @@
 CMakeCache.txt
 CMakeFiles/
 GNUmakefile
-Makefile
+/Makefile
+/src/Makefile
+/tests/Makefile
+/include/Makefile
 Makefile.in
 /aclocal.m4
 /autom4te.cache
@@ -28,7 +31,6 @@ config.h*
 /configure
 stamp-h1
 !config/config.h.in
-/packaging/
 /tests/run-dumper
 /tests/run-emitter
 /tests/run-emitter-test-suite
